@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hints – Paragraaf 15.5</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --blue: #1a3a5c;
+    --accent: #e8623a;
+    --light: #f5f0eb;
+    --mid: #d6cfc6;
+    --green: #2d6a4f;
+    --purple: #6b4c8a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: var(--blue);
+    letter-spacing: -0.02em;
+  }
+
+  header p {
+    color: #666;
+    margin-top: 0.4rem;
+    font-size: 0.95rem;
+  }
+
+  .opgave-block {
+    max-width: 640px;
+    margin: 0 auto 3rem;
+  }
+
+  .opgave-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--blue);
+    border-left: 4px solid var(--accent);
+    padding-left: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .opgave-tekst {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 1.2rem;
+    border: 1px solid var(--mid);
+  }
+
+  .hint-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--mid);
+    margin-bottom: 0.8rem;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  .hint-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.1rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  .hint-header:hover { background: #faf7f4; }
+
+  .hint-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    color: white;
+  }
+
+  .h1 .hint-number { background: var(--green); }
+  .h2 .hint-number { background: var(--accent); }
+  .h3 .hint-number { background: var(--purple); }
+
+  .hint-label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #333;
+    flex: 1;
+  }
+
+  .hint-sublabel {
+    font-size: 0.78rem;
+    color: #888;
+  }
+
+  .arrow {
+    font-size: 0.85rem;
+    color: #aaa;
+    transition: transform 0.2s;
+  }
+
+  .hint-card.open .arrow { transform: rotate(90deg); }
+
+  .hint-body {
+    display: none;
+    padding: 0 1.1rem 1rem 1.1rem;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: #333;
+    border-top: 1px solid var(--mid);
+    padding-top: 0.85rem;
+  }
+
+  .hint-card.open .hint-body { display: block; }
+
+  .warning {
+    font-size: 0.8rem;
+    color: #888;
+    font-style: italic;
+    margin-top: 0.6rem;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 20px;
+    margin-bottom: 0.5rem;
+  }
+
+  .tag-meetkundig { background: #e8f4f0; color: var(--green); }
+  .tag-algebraisch { background: #fce8e0; color: #c0421a; }
+  .tag-beide { background: #ede8f5; color: var(--purple); }
+
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #aaa;
+    margin-top: 2rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Hints — §15.5</h1>
+  <p>Klik op een hint als je vastloopt. Probeer eerst zelf verder!</p>
+</header>
+
+<!-- OPGAVE 39 -->
+<div class="opgave-block">
+  <div class="opgave-title">Opgave 39</div>
+  <div class="opgave-tekst">
+    In vierkant <em>ABCD</em> met zijde 6 is punt <em>F</em> het midden van zijde <em>BC</em> en is punt <em>E</em> de loodrechte projectie van <em>A</em> op lijnstuk <em>DF</em>.<br>
+    Kies een geschikte aanpak en bewijs dat <em>BE = AB</em>.
+  </div>
+
+  <div class="hint-card h1" onclick="toggle(this)">
+    <div class="hint-header">
+      <div class="hint-number">1</div>
+      <div>
+        <div class="hint-label">Richting kiezen</div>
+        <div class="hint-sublabel">Welke aanpak werkt hier?</div>
+      </div>
+      <div class="arrow">▶</div>
+    </div>
+    <div class="hint-body">
+      <span class="tag tag-beide">Beide methoden mogelijk</span><br>
+      Denk na: wat weet je van punt <em>E</em>? Het is de loodrechte projectie van <em>A</em> op <em>DF</em>. Dat betekent dat <em>AE ⊥ DF</em>.<br><br>
+      Kies coördinaten: plaats het vierkant handig in een assenstelsel, met <em>A</em> in de oorsprong. Dat maakt de algebraïsche aanpak overzichtelijk.
+    </div>
+  </div>
+
+  <div class="hint-card h2" onclick="toggle(this)">
+    <div class="hint-header">
+      <div class="hint-number">2</div>
+      <div>
+        <div class="hint-label">Opstelling en berekening</div>
+        <div class="hint-sublabel">Coördinaten en vergelijkingen</div>
+      </div>
+      <div class="arrow">▶</div>
+    </div>
+    <div class="hint-body">
+      <span class="tag tag-algebraisch">Algebraïsch</span><br>
+      Kies: <em>A = (0,0)</em>, <em>B = (6,0)</em>, <em>C = (6,6)</em>, <em>D = (0,6)</em>, <em>F = (6,3)</em>.<br><br>
+      Schrijf de vergelijking van lijn <em>DF</em>. Bepaal dan de loodlijn vanuit <em>A</em> op <em>DF</em>. Het snijpunt van die twee lijnen is punt <em>E</em>.<br><br>
+      Bereken daarna <em>BE</em> en controleer of dat gelijk is aan <em>AB = 6</em>.
+      <p class="warning">Tip: loodrechte lijnen hebben richtingscoëfficiënten waarvan het product –1 is.</p>
+    </div>
+  </div>
+
+  <div class="hint-card h3" onclick="toggle(this)">
+    <div class="hint-header">
+      <div class="hint-number">3</div>
+      <div>
+        <div class="hint-label">Bijna de volledige aanpak</div>
+        <div class="hint-sublabel">Gebruik dit alleen als je echt vastzit</div>
+      </div>
+      <div class="arrow">▶</div>
+    </div>
+    <div class="hint-body">
+      <span class="tag tag-algebraisch">Algebraïsch</span><br>
+      Lijn <em>DF</em>: van <em>(0,6)</em> naar <em>(6,3)</em>, richtingscoëfficiënt = <sup>3–6</sup>/<sub>6–0</sub> = –½.<br>
+      Vergelijking <em>DF</em>: <em>y = –½x + 6</em>.<br><br>
+      Loodlijn vanuit <em>A(0,0)</em>: richtingscoëfficiënt = 2 → <em>y = 2x</em>.<br><br>
+      Snijpunt <em>E</em>: los op: <em>2x = –½x + 6</em> → <em>x = 12/5</em>, <em>y = 24/5</em>.<br>
+      Dus <em>E = (12/5, 24/5)</em>.<br><br>
+      <em>BE</em> = afstand van <em>(6,0)</em> tot <em>(12/5, 24/5)</em> = √((6–12/5)² + (24/5)²) = √(…) = 6. ✓
+    </div>
+  </div>
+</div>
+
+<!-- OPGAVE 40 -->
+<div class="opgave-block">
+  <div class="opgave-title">Opgave 40</div>
+  <div class="opgave-tekst">
+    De cirkel <em>c</em> met straal 5 snijdt de x-as in punt <em>A</em> en de y-as in punt <em>D</em>. De raaklijn in een punt <em>C</em> aan de cirkel snijdt de y-as in punt <em>Q</em> en de raaklijn in <em>A</em> aan de cirkel in punt <em>P</em>.<br>
+    Kies een geschikte aanpak en bewijs dat <em>MQ = PQ</em>.
+  </div>
+
+  <div class="hint-card h1" onclick="toggle(this)">
+    <div class="hint-header">
+      <div class="hint-number">1</div>
+      <div>
+        <div class="hint-label">Richting kiezen</div>
+        <div class="hint-sublabel">Wat weet je over raaklijnen aan cirkels?</div>
+      </div>
+      <div class="arrow">▶</div>
+    </div>
+    <div class="hint-body">
+      <span class="tag tag-meetkundig">Meetkundig</span><br>
+      Denk aan de stelling: <em>raaklijnsegmenten vanuit een extern punt zijn even lang</em>.<br><br>
+      Punt <em>P</em> ligt buiten de cirkel en is het snijpunt van twee raaklijnen. Wat kun je daar direct uit concluderen?<br><br>
+      Kijk ook naar punt <em>Q</em>: wat is de relatie tussen <em>Q</em>, <em>M</em> en de raaklijn?
+    </div>
+  </div>
+
+  <div class="hint-card h2" onclick="toggle(this)">
+    <div class="hint-header">
+      <div class="hint-number">2</div>
+      <div>
+        <div class="hint-label">Raaklijnsegmenten benoemen</div>
+        <div class="hint-sublabel">Gebruik de stelling concreet</div>
+      </div>
+      <div class="arrow">▶</div>
+    </div>
+    <div class="hint-body">
+      <span class="tag tag-meetkundig">Meetkundig</span><br>
+      Vanuit punt <em>P</em> zijn twee raaklijnen getrokken aan de cirkel: één raakt in <em>A</em>, één raakt in <em>C</em>.<br>
+      Stelling → <em>PA = PC</em>.<br><br>
+      Vanuit punt <em>Q</em> zijn ook twee raaklijnen aan de cirkel: één raakt in <em>C</em>, één raakt in <em>D</em>.<br>
+      Stelling → <em>QC = QD</em>.<br><br>
+      Denk nu na: wat is <em>QD</em> in termen van de figuur? <em>Q</em> ligt op de y-as, <em>D</em> ook. Wat betekent dat voor <em>QD</em> en <em>QM</em>?
+      <p class="warning">M is het middelpunt van de cirkel. D ligt op de y-as, net als Q.</p>
+    </div>
+  </div>
+
+  <div class="hint-card h3" onclick="toggle(this)">
+    <div class="hint-header">
+      <div class="hint-number">3</div>
+      <div>
+        <div class="hint-label">Bijna de volledige aanpak</div>
+        <div class="hint-sublabel">Gebruik dit alleen als je echt vastzit</div>
+      </div>
+      <div class="arrow">▶</div>
+    </div>
+    <div class="hint-body">
+      <span class="tag tag-meetkundig">Meetkundig</span><br>
+      Stel het middelpunt <em>M = (0,0)</em>, dan is <em>A = (5,0)</em> en <em>D = (0,5)</em>.<br><br>
+      <strong>Stap 1:</strong> Vanuit <em>P</em> twee raaklijnen → <em>PA = PC</em> (raaklijnsegmenten gelijk).<br>
+      <strong>Stap 2:</strong> Vanuit <em>Q</em> twee raaklijnen → <em>QC = QD</em>.<br>
+      <strong>Stap 3:</strong> <em>Q</em> ligt op de y-as, <em>D = (0,5)</em> ook. Dus <em>QD = |QM| – 5</em> of <em>5 – |QM|</em> afhankelijk van de positie. Maar: <em>QD</em> is een stuk van de y-as → <em>QD = QM – MD = QM – 5</em>.<br><br>
+      <strong>Conclusie:</strong> <em>MQ = QD + DM = QC + 5</em>. Combineer met <em>PQ = PC + … </em> om <em>MQ = PQ</em> te bewijzen via de stelling van raaklijnsegmenten.
+    </div>
+  </div>
+</div>
+
+<footer>§15.5 Algebraïsch of meetkundig · Moderne Wiskunde 5 VWO</footer>
+
+<script>
+function toggle(card) {
+  card.classList.toggle('open');
+}
+</script>
+</body>
+</html>
