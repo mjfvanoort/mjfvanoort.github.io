@@ -44,7 +44,7 @@
   }
 
   .opgave-block {
-    max-width: 640px;
+    max-width: 660px;
     margin: 0 auto 3rem;
   }
 
@@ -128,37 +128,50 @@
 
   .hint-body {
     display: none;
-    padding: 0 1.1rem 1rem 1.1rem;
+    padding: 0.85rem 1.1rem 1rem 1.1rem;
     font-size: 0.88rem;
-    line-height: 1.65;
+    line-height: 1.7;
     color: #333;
     border-top: 1px solid var(--mid);
-    padding-top: 0.85rem;
   }
 
   .hint-card.open .hint-body { display: block; }
+
+  .methode-blok {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .methode-blok:last-child { margin-bottom: 0; }
+
+  .methode-blok.meetkundig {
+    background: #f0f7f4;
+    border-left: 3px solid var(--green);
+  }
+
+  .methode-blok.algebraisch {
+    background: #fef3ee;
+    border-left: 3px solid var(--accent);
+  }
+
+  .methode-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .meetkundig .methode-label { color: var(--green); }
+  .algebraisch .methode-label { color: #c0421a; }
 
   .warning {
     font-size: 0.8rem;
     color: #888;
     font-style: italic;
-    margin-top: 0.6rem;
+    margin-top: 0.5rem;
   }
-
-  .tag {
-    display: inline-block;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 0.15rem 0.5rem;
-    border-radius: 20px;
-    margin-bottom: 0.5rem;
-  }
-
-  .tag-meetkundig { background: #e8f4f0; color: var(--green); }
-  .tag-algebraisch { background: #fce8e0; color: #c0421a; }
-  .tag-beide { background: #ede8f5; color: var(--purple); }
 
   footer {
     text-align: center;
@@ -166,13 +179,20 @@
     color: #aaa;
     margin-top: 2rem;
   }
+
+  .divider {
+    border: none;
+    border-top: 2px dashed var(--mid);
+    margin: 2.5rem auto;
+    max-width: 660px;
+  }
 </style>
 </head>
 <body>
 
 <header>
   <h1>Hints — §15.5</h1>
-  <p>Klik op een hint als je vastloopt. Probeer eerst zelf verder!</p>
+  <p>Klik op een hint als je vastloopt. Probeer eerst zelf! Bij elke hint staan beide aanpakken.</p>
 </header>
 
 <!-- OPGAVE 39 -->
@@ -183,41 +203,55 @@
     Kies een geschikte aanpak en bewijs dat <em>BE = AB</em>.
   </div>
 
-  <div class="hint-card h1" onclick="toggle(this)">
+  <div class="hint-card h1" id="opgave-39-hint-1" onclick="toggle(this)">
     <div class="hint-header">
       <div class="hint-number">1</div>
       <div>
         <div class="hint-label">Richting kiezen</div>
-        <div class="hint-sublabel">Welke aanpak werkt hier?</div>
+        <div class="hint-sublabel">Welke hulplijn of opstelling helpt je op weg?</div>
       </div>
       <div class="arrow">▶</div>
     </div>
     <div class="hint-body">
-      <span class="tag tag-beide">Beide methoden mogelijk</span><br>
-      Denk na: wat weet je van punt <em>E</em>? Het is de loodrechte projectie van <em>A</em> op <em>DF</em>. Dat betekent dat <em>AE ⊥ DF</em>.<br><br>
-      Kies coördinaten: plaats het vierkant handig in een assenstelsel, met <em>A</em> in de oorsprong. Dat maakt de algebraïsche aanpak overzichtelijk.
+      <div class="methode-blok meetkundig">
+        <div class="methode-label">Meetkundig</div>
+        Noem <em>G</em> het midden van <em>AD</em> en teken hulplijn <em>BG</em>. Noem het snijpunt van <em>BG</em> met <em>AE</em> punt <em>H</em>.<br>
+        Vraag jezelf: welke vierhoek vormen <em>B, F, D, G</em>? Wat kun je zeggen over de zijden van die vierhoek?
+      </div>
+      <div class="methode-blok algebraisch">
+        <div class="methode-label">Algebraïsch</div>
+        Kies een assenstelsel met <em>A = (0, 0)</em> en <em>AB = 6</em>: dan zijn <em>B = (6, 0)</em>, <em>C = (6, 6)</em>, <em>D = (0, 6)</em> en <em>F = (6, 3)</em>.<br>
+        Schrijf de vergelijkingen op van lijn <em>DF</em> en de loodlijn vanuit <em>A</em> op <em>DF</em>.
+      </div>
     </div>
   </div>
 
-  <div class="hint-card h2" onclick="toggle(this)">
+  <div class="hint-card h2" id="opgave-39-hint-2" onclick="toggle(this)">
     <div class="hint-header">
       <div class="hint-number">2</div>
       <div>
-        <div class="hint-label">Opstelling en berekening</div>
-        <div class="hint-sublabel">Coördinaten en vergelijkingen</div>
+        <div class="hint-label">Tussenstap uitwerken</div>
+        <div class="hint-sublabel">Gebruik de structuur die je in hint 1 vond</div>
       </div>
       <div class="arrow">▶</div>
     </div>
     <div class="hint-body">
-      <span class="tag tag-algebraisch">Algebraïsch</span><br>
-      Kies: <em>A = (0,0)</em>, <em>B = (6,0)</em>, <em>C = (6,6)</em>, <em>D = (0,6)</em>, <em>F = (6,3)</em>.<br><br>
-      Schrijf de vergelijking van lijn <em>DF</em>. Bepaal dan de loodlijn vanuit <em>A</em> op <em>DF</em>. Het snijpunt van die twee lijnen is punt <em>E</em>.<br><br>
-      Bereken daarna <em>BE</em> en controleer of dat gelijk is aan <em>AB = 6</em>.
-      <p class="warning">Tip: loodrechte lijnen hebben richtingscoëfficiënten waarvan het product –1 is.</p>
+      <div class="methode-blok meetkundig">
+        <div class="methode-label">Meetkundig</div>
+        <em>BFDG</em> is een parallellogram (twee paar evenwijdige en even lange zijden). Daardoor geldt: <em>BG // FD</em>, en dus <em>BG ⊥ AE</em>.<br><br>
+        Gebruik nu gelijkvormigheid: △<em>AHG</em> ~ △<em>AED</em>. De verhouding <em>AG : AD = 1 : 2</em>, dus ook <em>AH : AE = 1 : 2</em>. Conclusie: <em>H</em> is het midden van <em>AE</em>.
+      </div>
+      <div class="methode-blok algebraisch">
+        <div class="methode-label">Algebraïsch</div>
+        Lijn <em>DF</em>: van <em>D(0,6)</em> naar <em>F(6,3)</em> → richtingscoëfficiënt = −½ → vergelijking: <em>y = −½x + 6</em>.<br>
+        Loodlijn vanuit <em>A(0,0)</em>: richtingscoëfficiënt = 2 → vergelijking: <em>y = 2x</em>.<br>
+        Los nu het snijpunt <em>E</em> op.
+        <p class="warning">Tip: loodrechte lijnen hebben richtingscoëfficiënten waarvan het product −1 is.</p>
+      </div>
     </div>
   </div>
 
-  <div class="hint-card h3" onclick="toggle(this)">
+  <div class="hint-card h3" id="opgave-39-hint-3" onclick="toggle(this)">
     <div class="hint-header">
       <div class="hint-number">3</div>
       <div>
@@ -227,16 +261,19 @@
       <div class="arrow">▶</div>
     </div>
     <div class="hint-body">
-      <span class="tag tag-algebraisch">Algebraïsch</span><br>
-      Lijn <em>DF</em>: van <em>(0,6)</em> naar <em>(6,3)</em>, richtingscoëfficiënt = <sup>3–6</sup>/<sub>6–0</sub> = –½.<br>
-      Vergelijking <em>DF</em>: <em>y = –½x + 6</em>.<br><br>
-      Loodlijn vanuit <em>A(0,0)</em>: richtingscoëfficiënt = 2 → <em>y = 2x</em>.<br><br>
-      Snijpunt <em>E</em>: los op: <em>2x = –½x + 6</em> → <em>x = 12/5</em>, <em>y = 24/5</em>.<br>
-      Dus <em>E = (12/5, 24/5)</em>.<br><br>
-      <em>BE</em> = afstand van <em>(6,0)</em> tot <em>(12/5, 24/5)</em> = √((6–12/5)² + (24/5)²) = √(…) = 6. ✓
+      <div class="methode-blok meetkundig">
+        <div class="methode-label">Meetkundig</div>
+        Je weet nu dat <em>H</em> het midden is van <em>AE</em> en dat <em>BH ⊥ AE</em>. Kijk naar driehoek <em>ABE</em>: wat zijn de bijzondere eigenschappen van lijn <em>BH</em> in die driehoek? Is <em>BH</em> een zwaartelijn, een hoogtelijn, of allebei? Wat zegt dat over de driehoek?
+      </div>
+      <div class="methode-blok algebraisch">
+        <div class="methode-label">Algebraïsch</div>
+        Los het stelsel op: <em>y = 2x</em> en <em>y = −½x + 6</em>. Je vindt dan punt <em>E</em>. Bereken daarna de afstand <em>BE</em> met de afstandsformule en vergelijk die met <em>AB = 6</em>. Let op de vereenvoudiging van de wortel aan het einde.
+      </div>
     </div>
   </div>
 </div>
+
+<hr class="divider">
 
 <!-- OPGAVE 40 -->
 <div class="opgave-block">
@@ -246,44 +283,58 @@
     Kies een geschikte aanpak en bewijs dat <em>MQ = PQ</em>.
   </div>
 
-  <div class="hint-card h1" onclick="toggle(this)">
+  <div class="hint-card h1" id="opgave-40-hint-1" onclick="toggle(this)">
     <div class="hint-header">
       <div class="hint-number">1</div>
       <div>
         <div class="hint-label">Richting kiezen</div>
-        <div class="hint-sublabel">Wat weet je over raaklijnen aan cirkels?</div>
+        <div class="hint-sublabel">Welke stelling of opstelling gebruik je?</div>
       </div>
       <div class="arrow">▶</div>
     </div>
     <div class="hint-body">
-      <span class="tag tag-meetkundig">Meetkundig</span><br>
-      Denk aan de stelling: <em>raaklijnsegmenten vanuit een extern punt zijn even lang</em>.<br><br>
-      Punt <em>P</em> ligt buiten de cirkel en is het snijpunt van twee raaklijnen. Wat kun je daar direct uit concluderen?<br><br>
-      Kijk ook naar punt <em>Q</em>: wat is de relatie tussen <em>Q</em>, <em>M</em> en de raaklijn?
+      <div class="methode-blok meetkundig">
+        <div class="methode-label">Meetkundig</div>
+        Denk aan de stelling: <em>raaklijnstukken vanuit een extern punt zijn even lang</em>.<br>
+        Punt <em>P</em> ligt buiten de cirkel en er gaan twee raaklijnen door <em>P</em>. Welke twee raakpunten horen daarbij? Schrijf de gelijke lengtes op.<br>
+        Denk daarna na: wat weet je over de zijden <em>MA</em> en <em>MC</em>? Kijk naar driehoek <em>MAP</em> en driehoek <em>MCP</em> — wat hebben die gemeen?
+      </div>
+      <div class="methode-blok algebraisch">
+        <div class="methode-label">Algebraïsch</div>
+        Stel <em>C = (p, q)</em> op de cirkel, met middelpunt <em>M</em> in de oorsprong. Dan geldt <em>x² + y² = 25</em>.<br>
+        De vector <em>MC</em> = (p, q) is de normaalvector van de raaklijn in <em>C</em>. Gebruik dit om de vergelijking van lijn <em>PQ</em> op te schrijven.
+      </div>
     </div>
   </div>
 
-  <div class="hint-card h2" onclick="toggle(this)">
+  <div class="hint-card h2" id="opgave-40-hint-2" onclick="toggle(this)">
     <div class="hint-header">
       <div class="hint-number">2</div>
       <div>
-        <div class="hint-label">Raaklijnsegmenten benoemen</div>
-        <div class="hint-sublabel">Gebruik de stelling concreet</div>
+        <div class="hint-label">Tussenstap uitwerken</div>
+        <div class="hint-sublabel">Bereken lengtes of hoeken concreet</div>
       </div>
       <div class="arrow">▶</div>
     </div>
     <div class="hint-body">
-      <span class="tag tag-meetkundig">Meetkundig</span><br>
-      Vanuit punt <em>P</em> zijn twee raaklijnen getrokken aan de cirkel: één raakt in <em>A</em>, één raakt in <em>C</em>.<br>
-      Stelling → <em>PA = PC</em>.<br><br>
-      Vanuit punt <em>Q</em> zijn ook twee raaklijnen aan de cirkel: één raakt in <em>C</em>, één raakt in <em>D</em>.<br>
-      Stelling → <em>QC = QD</em>.<br><br>
-      Denk nu na: wat is <em>QD</em> in termen van de figuur? <em>Q</em> ligt op de y-as, <em>D</em> ook. Wat betekent dat voor <em>QD</em> en <em>QM</em>?
-      <p class="warning">M is het middelpunt van de cirkel. D ligt op de y-as, net als Q.</p>
+      <div class="methode-blok meetkundig">
+        <div class="methode-label">Meetkundig</div>
+        Vanuit <em>P</em>: twee raaklijnstukken → <em>PA = PC</em>.<br>
+        Je weet ook dat <em>MA = MC</em> (beide stralen) en dat <em>MP</em> een gedeelde zijde is.<br>
+        Wat kun je hieruit concluderen over de driehoeken <em>MAP</em> en <em>MCP</em>? Zijn ze congruent, gelijkvormig, of iets anders? Gebruik dit om iets te zeggen over ∠<em>AMP</em> en ∠<em>CMP</em>.<br><br>
+        Noem ∠<em>AMP = α</em> en druk ∠<em>CMQ</em> uit in α. Denk daarna na over ∠<em>PMQ</em>.
+      </div>
+      <div class="methode-blok algebraisch">
+        <div class="methode-label">Algebraïsch</div>
+        Vergelijking raaklijn in <em>C(p,q)</em>: <em>px + qy = 25</em> (gebruik dat <em>p² + q² = 25</em>).<br><br>
+        Snijpunt met y-as (x = 0): <em>Q = (0, 25/q)</em>.<br>
+        De raaklijn in <em>A(5, 0)</em> staat loodrecht op de straal <em>MA</em>, dus die raaklijn is verticaal: <em>x = 5</em>.<br>
+        Bereken snijpunt <em>P</em> door <em>x = 5</em> in te vullen in de vergelijking van lijn <em>PQ</em>.
+      </div>
     </div>
   </div>
 
-  <div class="hint-card h3" onclick="toggle(this)">
+  <div class="hint-card h3" id="opgave-40-hint-3" onclick="toggle(this)">
     <div class="hint-header">
       <div class="hint-number">3</div>
       <div>
@@ -293,22 +344,36 @@
       <div class="arrow">▶</div>
     </div>
     <div class="hint-body">
-      <span class="tag tag-meetkundig">Meetkundig</span><br>
-      Stel het middelpunt <em>M = (0,0)</em>, dan is <em>A = (5,0)</em> en <em>D = (0,5)</em>.<br><br>
-      <strong>Stap 1:</strong> Vanuit <em>P</em> twee raaklijnen → <em>PA = PC</em> (raaklijnsegmenten gelijk).<br>
-      <strong>Stap 2:</strong> Vanuit <em>Q</em> twee raaklijnen → <em>QC = QD</em>.<br>
-      <strong>Stap 3:</strong> <em>Q</em> ligt op de y-as, <em>D = (0,5)</em> ook. Dus <em>QD = |QM| – 5</em> of <em>5 – |QM|</em> afhankelijk van de positie. Maar: <em>QD</em> is een stuk van de y-as → <em>QD = QM – MD = QM – 5</em>.<br><br>
-      <strong>Conclusie:</strong> <em>MQ = QD + DM = QC + 5</em>. Combineer met <em>PQ = PC + … </em> om <em>MQ = PQ</em> te bewijzen via de stelling van raaklijnsegmenten.
+      <div class="methode-blok meetkundig">
+        <div class="methode-label">Meetkundig</div>
+        Je hebt ∠<em>AMP = ∠CMP = α</em>. De raaklijn in <em>A</em> staat loodrecht op <em>MA</em>, dus ∠<em>MAP = 90°</em>. Druk ∠<em>MPA</em> uit in α.<br>
+        Bereken nu ∠<em>CMQ</em>: gebruik dat <em>MC</em> loodrecht staat op de raaklijn in <em>C</em>, en dat ∠<em>AMC = 90°</em>. Druk ook ∠<em>PMQ</em> uit in α.<br>
+        Vergelijk ∠<em>PMQ</em> met ∠<em>MPQ</em> — zijn die gelijk? Wat zegt dat over driehoek <em>MPQ</em> en de zijden <em>MQ</em> en <em>PQ</em>?
+      </div>
+      <div class="methode-blok algebraisch">
+        <div class="methode-label">Algebraïsch</div>
+        Je hebt <em>Q = (0, 25/q)</em> en <em>P = (5, (−5p+25)/q)</em>. Bereken nu <em>MQ</em> als afstand van <em>M(0,0)</em> tot <em>Q</em>, en <em>PQ</em> als afstand van <em>P</em> tot <em>Q</em>. Gebruik bij het vereenvoudigen van <em>PQ</em> dat <em>p² + q² = 25</em>.
+      </div>
     </div>
   </div>
 </div>
 
-<footer>§15.5 Algebraïsch of meetkundig · Moderne Wiskunde 5 VWO</footer>
+<footer>§15.5 Algebraïsch of meetkundig · Moderne Wiskunde 5 VWO · mjfvanoort.github.io</footer>
 
 <script>
 function toggle(card) {
   card.classList.toggle('open');
 }
+window.addEventListener('DOMContentLoaded', () => {
+  const hash = window.location.hash;
+  if (hash) {
+    const el = document.querySelector(hash);
+    if (el) {
+      el.classList.add('open');
+      setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+    }
+  }
+});
 </script>
 </body>
 </html>
