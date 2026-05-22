@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hintsysteem — §8.7 Gemengde Opdrachten</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap');
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f7f5f2;
+    --surface2: #eeeae4;
+    --border: #ddd8d0;
+    --border2: #c8c0b4;
+    --gold: #a07820;
+    --gold-dim: #b89040;
+    --gold-glow: rgba(160,120,32,0.08);
+    --cream: #1a1714;
+    --cream-dim: #4a4540;
+    --red: #c94c4c;
+    --green: #2a7a54;
+    --text: #1a1714;
+    --text-muted: #6a6058;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+    font-weight: 300;
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  /* Decorative top bar */
+  .topbar {
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  /* Header */
+  header {
+    padding: 48px 40px 36px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '§8.7';
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 8rem;
+    color: rgba(160,120,32,0.08);
+    letter-spacing: -0.04em;
+    user-select: none;
+  }
+
+  .header-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 12px;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+
+  header h1 em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  header p {
+    margin-top: 10px;
+    color: var(--cream-dim);
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  /* Navigation */
+  .nav {
+    display: flex;
+    gap: 0;
+    padding: 0 40px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+
+  .nav-btn {
+    padding: 16px 28px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    position: relative;
+    top: 1px;
+  }
+
+  .nav-btn:hover { color: var(--cream); }
+  .nav-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  /* Main content */
+  .content {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 48px 40px 0;
+  }
+
+  /* Exercise panel */
+  .exercise-panel { display: none; }
+  .exercise-panel.active { display: block; }
+
+  /* Exercise header */
+  .exercise-header {
+    margin-bottom: 32px;
+  }
+
+  .exercise-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: rgba(160,120,32,0.2);
+    line-height: 1;
+    margin-bottom: -8px;
+  }
+
+  .exercise-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--cream);
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+
+  .exercise-desc {
+    color: var(--cream-dim);
+    font-size: 0.85rem;
+    font-style: italic;
+    line-height: 1.6;
+    padding: 12px 16px;
+    border-left: 2px solid var(--gold-dim);
+    background: var(--gold-glow);
+    border-radius: 0 4px 4px 0;
+    margin-top: 12px;
+  }
+
+  /* Subquestions */
+  .subquestions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .subq {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .subq:hover { border-color: var(--border2); }
+  .subq.has-hints-open { border-color: var(--gold-dim); }
+
+  /* Subquestion header */
+  .subq-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 20px;
+  }
+
+  .subq-letter {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    color: var(--gold);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .subq-text {
+    flex: 1;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--cream);
+  }
+
+  .subq-text .formula {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  /* Hint buttons area */
+  .hint-area {
+    padding: 0 20px 18px 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .hint-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--cream-dim);
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    width: fit-content;
+  }
+
+  .hint-btn:hover:not(:disabled) {
+    border-color: var(--gold-dim);
+    color: var(--cream);
+    background: var(--gold-glow);
+  }
+
+  .hint-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .hint-btn .hint-icon {
+    font-size: 0.75rem;
+    opacity: 0.7;
+  }
+
+  /* Hint reveal box */
+  .hint-box {
+    display: none;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 4px;
+    animation: slideDown 0.2s ease;
+  }
+
+  .hint-box.visible { display: block; }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hint-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--gold-dim);
+    margin-bottom: 8px;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .hint-text {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--cream);
+  }
+
+  .hint-text .math {
+    font-style: italic;
+    color: #7a5c10;
+    background: rgba(160,120,32,0.1);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  .hint-text .step {
+    display: block;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hint-text .step:last-child { border-bottom: none; }
+
+  /* Answer section */
+  .answer-area {
+    padding: 0 20px 18px 64px;
+    margin-top: -4px;
+  }
+
+  .answer-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid rgba(42,122,84,0.4);
+    color: rgba(42,122,84,0.8);
+    padding: 7px 14px;
+    border-radius: 5px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .answer-btn:hover {
+    border-color: var(--green);
+    color: var(--green);
+    background: rgba(42,122,84,0.07);
+  }
+
+  .answer-box {
+    display: none;
+    background: rgba(42,122,84,0.05);
+    border: 1px solid rgba(42,122,84,0.2);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 8px;
+    animation: slideDown 0.2s ease;
+  }
+
+  .answer-box.visible { display: block; }
+
+  .answer-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--green);
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+
+  .answer-text {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--cream);
+  }
+
+  .answer-text .math {
+    font-style: italic;
+    color: #1a6040;
+    background: rgba(42,122,84,0.1);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  /* Divider between hint area and answer */
+  .subq-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 20px 14px 64px;
+  }
+
+  /* Progress indicator */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .progress-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+  }
+
+  .progress-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .pdot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border2);
+    transition: background 0.3s;
+  }
+
+  .pdot.lit { background: var(--gold); }
+
+  /* Decorative rule */
+  .ornament {
+    text-align: center;
+    color: var(--gold-dim);
+    font-size: 1rem;
+    margin: 32px 0 28px;
+    letter-spacing: 0.3em;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar"></div>
+
+<header>
+  <div class="header-tag">HAVO 4 · WISKUNDE B · HOOFDSTUK 8</div>
+  <h1>Gemengde Opdrachten — <em>Logaritmische Functies</em></h1>
+  <p>Gebruik de hints alleen als je echt vastzit. Probeer eerst zelf.</p>
+</header>
+
+<nav class="nav">
+  <button class="nav-btn active" data-ex="52" onclick="switchEx('52', this)">Opgave 52</button>
+  <button class="nav-btn" data-ex="53" onclick="switchEx('53', this)">Opgave 53</button>
+  <button class="nav-btn" data-ex="54" onclick="switchEx('54', this)">Opgave 54</button>
+  <button class="nav-btn" data-ex="55" onclick="switchEx('55', this)">Opgave 55</button>
+</nav>
+
+<div class="content">
+
+  <!-- ===================== OPGAVE 52 ===================== -->
+  <div class="exercise-panel active" id="ex-52">
+    <div class="exercise-header">
+      <div class="exercise-num">52</div>
+      <div class="exercise-title">Logaritmische functie met kwadraat</div>
+      <div class="exercise-desc">
+        Gegeven is de functie <span style="font-style:italic;color:var(--gold)">f(x) = log(x² − 6x + 8)</span>
+      </div>
+    </div>
+
+    <div class="subquestions">
+
+      <!-- 52a -->
+      <div class="subq" id="subq-52a">
+        <div class="subq-header">
+          <div class="subq-letter">a</div>
+          <div class="subq-text">Bereken het domein van <span class="formula">f</span>.</div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('52a',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-52a-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Het argument van een logaritme moet <span class="math">strikt positief</span> zijn. Stel dus: <span class="math">x² − 6x + 8 > 0</span>. Los deze ongelijkheid op door eerst de nulpunten te vinden via <span class="math">x² − 6x + 8 = 0</span>.
+            </div>
+          </div>
+          <button class="hint-btn" onclick="showHint('52a',2,this)" id="hbtn-52a-2" disabled><span class="hint-icon">💡</span> Hint 2</button>
+          <div class="hint-box" id="hint-52a-2">
+            <div class="hint-label">HINT 2</div>
+            <div class="hint-text">
+              Factoriseer: <span class="math">(x−2)(x−4) = 0</span>, dus <span class="math">x = 2</span> of <span class="math">x = 4</span>. De parabool <span class="math">y = x²−6x+8</span> is een dalparabool, dus hij is positief <em>buiten</em> de nulpunten. Het domein is <span class="math">x &lt; 2</span> of <span class="math">x > 4</span>.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('52a',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-52a">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text">Domein van <span class="math">f</span> is <span class="math">x &lt; 2</span> of <span class="math">x > 4</span>, oftewel <span class="math">⟨←, 2⟩ ∪ ⟨4, →⟩</span>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 52b -->
+      <div class="subq" id="subq-52b">
+        <div class="subq-header">
+          <div class="subq-letter">b</div>
+          <div class="subq-text">Geef vergelijkingen van de asymptoten van de grafiek van <span class="formula">f</span>.</div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('52b',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-52b-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Verticale asymptoten ontstaan waar het argument van de logaritme gelijk wordt aan nul. Kijk naar de grenswaarden van het domein: waar nadert <span class="math">x² − 6x + 8</span> naar nul?
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('52b',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-52b">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text">De verticale asymptoten zijn <span class="math">x = 2</span> en <span class="math">x = 4</span>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 52c -->
+      <div class="subq" id="subq-52c">
+        <div class="subq-header">
+          <div class="subq-letter">c</div>
+          <div class="subq-text">Plot en schets de grafiek van <span class="formula">f</span>.</div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('52c',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-52c-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Gebruik het domein (<span class="math">x &lt; 2</span> of <span class="math">x > 4</span>) en de asymptoten als houvast. Bereken een paar punten: wat is <span class="math">f(0)</span>? En <span class="math">f(5)</span>? Denk ook aan wat er gebeurt als <span class="math">x</span> ver van de asymptoten af staat.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('52c',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-52c">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text">De grafiek bestaat uit twee takken: één voor <span class="math">x &lt; 2</span> en één voor <span class="math">x > 4</span>. Beide takken gaan naar <span class="math">−∞</span> bij de asymptoten en stijgen naar <span class="math">+∞</span> verder weg. Zie de schets in het uitwerkingenboek.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 52d -->
+      <div class="subq" id="subq-52d">
+        <div class="subq-header">
+          <div class="subq-letter">d</div>
+          <div class="subq-text">Los exact op: <span class="formula">f(x) &lt; 0</span>.</div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('52d',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-52d-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              <span class="math">log(x²−6x+8) &lt; 0</span> betekent dat het argument kleiner is dan <span class="math">10⁰ = 1</span>. Stel dus: <span class="math">x²−6x+8 &lt; 1</span>, oftewel <span class="math">x²−6x+7 &lt; 0</span>. Vergeet niet ook het domein te gebruiken!
+            </div>
+          </div>
+          <button class="hint-btn" onclick="showHint('52d',2,this)" id="hbtn-52d-2" disabled><span class="hint-icon">💡</span> Hint 2</button>
+          <div class="hint-box" id="hint-52d-2">
+            <div class="hint-label">HINT 2</div>
+            <div class="hint-text">
+              Los <span class="math">x²−6x+7 = 0</span> op met de wortelformule: <span class="math">x = 3 ± √2</span>. De parabool is negatief tussen de nulpunten: <span class="math">3−√2 &lt; x &lt; 3+√2</span>. Combineer dit met het domein om de uiteindelijke oplossing te vinden.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('52d',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-52d">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text">Oplossing: <span class="math">3−√2 &lt; x &lt; 2</span> of <span class="math">4 &lt; x &lt; 3+√2</span>.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== OPGAVE 53 ===================== -->
+  <div class="exercise-panel" id="ex-53">
+    <div class="exercise-header">
+      <div class="exercise-num">53</div>
+      <div class="exercise-title">Herleiden en snijpunten</div>
+      <div class="exercise-desc">
+        Gegeven is de functie <span style="font-style:italic;color:var(--gold)">f(x) = 1 + 4·³log(x)</span>
+      </div>
+    </div>
+
+    <div class="subquestions">
+
+      <!-- 53a -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">a</div>
+          <div class="subq-text">Het functievoorschrift van <span class="formula">f</span> kan worden geschreven in de vorm <span class="formula">f(x) = ³log(px<sup>q</sup>)</span> met <span class="formula">x > 0</span>. Bereken exact de waarden van <span class="formula">p</span> en <span class="formula">q</span>.</div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('53a',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-53a-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Schrijf de constante <span class="math">1</span> als een logaritme met grondtal 3: <span class="math">1 = ³log(3)</span>. Gebruik daarna de rekenregel <span class="math">³log(a) + ³log(b) = ³log(a·b)</span> en <span class="math">c·³log(x) = ³log(xᶜ)</span>.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('53a',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-53a">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text"><span class="math">f(x) = ³log(3x⁴)</span>, dus <span class="math">p = 3</span> en <span class="math">q = 4</span>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 53b -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">b</div>
+          <div class="subq-text">Los exact op: <span class="formula">f(x) = 7</span>.</div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('53b',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-53b-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Stel <span class="math">1 + 4·³log(x) = 7</span>. Isoleer eerst de logaritme: <span class="math">4·³log(x) = 6</span>, dus <span class="math">³log(x) = 1½</span>. Schrijf daarna <span class="math">x = 3^(3/2)</span>.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('53b',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-53b">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text"><span class="math">x = 3^(3/2) = 3√3</span>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 53c -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">c</div>
+          <div class="subq-text">Gegeven is de functie <span class="formula">g(x) = 1 + ³log(9x²)</span>. Bereken exact de coördinaten van het snijpunt van de grafieken van <span class="formula">f</span> en <span class="formula">g</span>.</div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('53c',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-53c-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Stel <span class="math">f(x) = g(x)</span>: <span class="math">1 + 4·³log(x) = 1 + ³log(9x²)</span>. De enen vallen weg. Gebruik dan de rekenregel <span class="math">c·³log(x) = ³log(xᶜ)</span> om alles te schrijven als één logaritme aan elke kant.
+            </div>
+          </div>
+          <button class="hint-btn" onclick="showHint('53c',2,this)" id="hbtn-53c-2" disabled><span class="hint-icon">💡</span> Hint 2</button>
+          <div class="hint-box" id="hint-53c-2">
+            <div class="hint-label">HINT 2</div>
+            <div class="hint-text">
+              Je krijgt <span class="math">³log(x⁴) = ³log(9x²)</span>, dus <span class="math">x⁴ = 9x²</span>. Deel beide kanten door <span class="math">x²</span> (let op: <span class="math">x > 0</span>). Los dan <span class="math">x² = 9</span> op. Vul de gevonden <span class="math">x</span> in voor de y-coördinaat.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('53c',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-53c">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text">Snijpunt: <span class="math">(3, 5)</span>. (<span class="math">x = −3</span> voldoet niet aan het domein.)</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== OPGAVE 54 ===================== -->
+  <div class="exercise-panel" id="ex-54">
+    <div class="exercise-header">
+      <div class="exercise-num">54</div>
+      <div class="exercise-title">Geneesmiddel in het bloed</div>
+      <div class="exercise-desc">
+        Een patiënt krijgt 100 mg geneesmiddel. Per dag wordt 25% afgebroken.
+      </div>
+    </div>
+
+    <div class="subquestions">
+
+      <!-- 54a -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">a</div>
+          <div class="subq-text">Stel het functievoorschrift op waarmee de nog aanwezige hoeveelheid medicijn <span class="formula">y(t)</span> na <span class="formula">t</span> dagen berekend kan worden.</div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('54a',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-54a-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Als 25% wordt afgebroken, blijft er 75% over. De groeifactor per dag is dus <span class="math">0,75</span>. Het beginpunt is <span class="math">y(0) = 100</span>. Gebruik de standaardvorm voor exponentieel verval: <span class="math">y(t) = beginwaarde · groeifactor^t</span>.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('54a',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-54a">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text"><span class="math">y(t) = 100 · 0,75<sup>t</sup></span>, met <span class="math">t</span> in dagen en <span class="math">y</span> in mg.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 54b -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">b</div>
+          <div class="subq-text">Bereken na hoeveel tijd er nog 15 mg geneesmiddel in het bloed zit. Geef je antwoord in uren nauwkeurig.</div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('54b',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-54b-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Stel <span class="math">100 · 0,75<sup>t</sup> = 15</span>. Deel beide kanten door 100 zodat je <span class="math">0,75<sup>t</sup> = 0,15</span> krijgt. Neem dan aan beide kanten het logaritme met grondtal 0,75, of gebruik de basisregel: <span class="math">t = ⁰·⁷⁵log(0,15)</span>. Vergeet niet te vermenigvuldigen met 24 voor uren.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('54b',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-54b">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text"><span class="math">t = ⁰·⁷⁵log(0,15) ≈ 6,595</span> dagen <span class="math">≈ 158 uur</span>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 54c -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">c</div>
+          <div class="subq-text">Schrijf de halveringstijd van dit afbraakproces als een logaritme.</div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('54c',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-54c-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              De halveringstijd is het tijdstip waarop nog de helft over is: <span class="math">0,75<sup>t</sup> = ½</span>. Pas de basisregel toe: uit <span class="math">g<sup>b</sup> = a</span> volgt <span class="math">b = ᵍlog(a)</span>.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('54c',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-54c">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text">Halveringstijd: <span class="math">t = ⁰·⁷⁵log(½)</span> dagen.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 54d -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">d</div>
+          <div class="subq-text">Benader de halveringstijd in uren nauwkeurig.</div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('54d',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-54d-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Bereken <span class="math">⁰·⁷⁵log(½)</span> met de rekenmachine via de wisselbasisformule: <span class="math">⁰·⁷⁵log(½) = log(½) / log(0,75)</span>. Vermenigvuldig daarna met 24 voor uren.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('54d',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-54d">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text"><span class="math">t = ⁰·⁷⁵log(½) · 24 ≈ 58 uur</span>.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== OPGAVE 55 ===================== -->
+  <div class="exercise-panel" id="ex-55">
+    <div class="exercise-header">
+      <div class="exercise-num">55</div>
+      <div class="exercise-title">Vergelijkingen exact oplossen</div>
+      <div class="exercise-desc">
+        Los exact op — zes vergelijkingen met exponenten en logaritmen.
+      </div>
+    </div>
+
+    <div class="subquestions">
+
+      <!-- 55a -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">a</div>
+          <div class="subq-text"><span class="formula">16 · 2<sup>x−6</sup> = √2</span></div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('55a',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-55a-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Schrijf alles als machten van 2: <span class="math">16 = 2⁴</span> en <span class="math">√2 = 2^(½)</span>. Dan wordt het <span class="math">2⁴ · 2^(x−6) = 2^(½)</span>. Gebruik de rekenregel <span class="math">2^a · 2^b = 2^(a+b)</span> en stel de exponenten gelijk.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('55a',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-55a">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text"><span class="math">x − 2 = ½</span>, dus <span class="math">x = 2½</span>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 55b -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">b</div>
+          <div class="subq-text"><span class="formula">1 − ²log(4x + 1) = −4</span></div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('55b',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-55b-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Isoleer de logaritme: <span class="math">²log(4x+1) = 5</span>. Gebruik dan de basisregel: <span class="math">4x + 1 = 2⁵ = 32</span>. Los op voor <span class="math">x</span>.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('55b',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-55b">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text"><span class="math">4x = 31</span>, dus <span class="math">x = 31/4 = 7¾</span>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 55c -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">c</div>
+          <div class="subq-text"><span class="formula">^(1/10)log(x² + x) = ^(10)log(1/6)</span></div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('55c',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-55c-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Gebruik de wisselbasisformule om de rechterkant te herschrijven: <span class="math">^(10)log(1/6) = log(1/6)/log(10) = log(1/6)/1 = log(1/6)</span>. Maar let op: <span class="math">^(1/10)log = −^(10)log</span> omdat grondtal 1/10 het inverse is van grondtal 10. Dus de vergelijking wordt <span class="math">^(1/10)log(x²+x) = ^(1/10)log(6)</span>.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('55c',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-55c">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text"><span class="math">x² + x = 6</span> → <span class="math">x² + x − 6 = 0</span> → <span class="math">(x+3)(x−2) = 0</span>. Oplossing: <span class="math">x = 2</span> (x = −3 valt buiten het domein).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 55d -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">d</div>
+          <div class="subq-text"><span class="formula">⁴log(2x) + ⁴log(7) ≥ 3</span></div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('55d',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-55d-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Combineer de logaritmen: <span class="math">⁴log(2x · 7) ≥ 3</span>, dus <span class="math">⁴log(14x) ≥ 3</span>. Gebruik de basisregel: <span class="math">14x ≥ 4³ = 64</span>. Vergeet het domein niet: <span class="math">x > 0</span>.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('55d',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-55d">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text"><span class="math">x ≥ 64/14 = 32/7 = 4 4/7</span>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 55e -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">e</div>
+          <div class="subq-text"><span class="formula">15 · 3<sup>x</sup> &lt; 75</span></div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('55e',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-55e-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Deel beide kanten door 15: <span class="math">3<sup>x</sup> &lt; 5</span>. Neem aan beide kanten het logaritme met grondtal 3: <span class="math">x &lt; ³log(5)</span>. Let op: grondtal 3 > 1, dus het ongelijkheidsteken blijft hetzelfde.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('55e',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-55e">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text"><span class="math">x &lt; ³log(5)</span>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 55f -->
+      <div class="subq">
+        <div class="subq-header">
+          <div class="subq-letter">f</div>
+          <div class="subq-text"><span class="formula">^(1/2)log(2x + 3) ≤ −3</span></div>
+        </div>
+        <div class="hint-area">
+          <button class="hint-btn" onclick="showHint('55f',1,this)"><span class="hint-icon">💡</span> Hint 1</button>
+          <div class="hint-box" id="hint-55f-1">
+            <div class="hint-label">HINT 1</div>
+            <div class="hint-text">
+              Gebruik de basisregel: <span class="math">^(1/2)log(2x+3) ≤ −3</span> betekent <span class="math">2x+3 ≥ (½)^(−3) = 2³ = 8</span>. Let op: grondtal ½ &lt; 1, dus het ongelijkheidsteken draait om! Vergeet het domein niet: <span class="math">2x+3 > 0</span>.
+            </div>
+          </div>
+        </div>
+        <div class="subq-divider"></div>
+        <div class="answer-area">
+          <button class="answer-btn" onclick="showAnswer('55f',this)">✓ Toon antwoord</button>
+          <div class="answer-box" id="ans-55f">
+            <div class="answer-label">ANTWOORD</div>
+            <div class="answer-text"><span class="math">2x ≥ 5</span>, dus <span class="math">x ≥ 2½</span>.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function switchEx(id, btn) {
+    document.querySelectorAll('.exercise-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('ex-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function showHint(subqId, num, btn) {
+    const box = document.getElementById('hint-' + subqId + '-' + num);
+    if (!box) return;
+    box.classList.add('visible');
+    btn.disabled = true;
+    btn.style.opacity = '0.4';
+
+    // Enable next hint button if it exists
+    const nextBtn = document.getElementById('hbtn-' + subqId + '-' + (num + 1));
+    if (nextBtn) nextBtn.disabled = false;
+
+    // Mark card as open
+    btn.closest('.subq').classList.add('has-hints-open');
+  }
+
+  function showAnswer(subqId, btn) {
+    const box = document.getElementById('ans-' + subqId);
+    if (!box) return;
+    box.classList.toggle('visible');
+    btn.textContent = box.classList.contains('visible') ? '✓ Verberg antwoord' : '✓ Toon antwoord';
+  }
+</script>
+
+</body>
+</html>
